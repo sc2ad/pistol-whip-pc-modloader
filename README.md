@@ -16,7 +16,7 @@ This modloader works as a standalone DLL (`MODLOADER.dll`). It does nothing by i
 
 ### How to use it
 
-* Download the latest `Modloader.zip` from [the releases page](https://github.com/pistol-whip-pc-modloader/releases/latest)
+* Download the latest `Modloader.zip` from [the releases page](https://github.com/sc2ad/pistol-whip-pc-modloader/releases/latest)
 * Extract all 4 DLLs into the same directory as your `PistolWhip.exe` and `GameAssembly.dll` files
 * Running the game once should create a `Mods` folder for you, which you can then place your mods in.
 
