@@ -27,19 +27,10 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="crt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="assert_util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="hook.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="relocation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

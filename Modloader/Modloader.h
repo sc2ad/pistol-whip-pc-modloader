@@ -10,4 +10,12 @@
 #define MODLOADER_API __declspec(dllimport)
 #endif
 
+#include "../pistol-whip-hook/PolyHook_2_0/headers/CapstoneDisassembler.hpp"
+#include "../pistol-whip-hook/PolyHook_2_0/headers/IHook.hpp"
+#include "../pistol-whip-hook/PolyHook_2_0/headers/Detour/x64Detour.hpp"
+#include "../pistol-whip-hook/PolyHook_2_0/headers/Detour/x86Detour.hpp"
+#include "../pistol-whip-hook/PolyHook_2_0/headers/Instruction.hpp"
+#include "../pistol-whip-hook/PolyHook_2_0/headers/Detour/ADetour.hpp"
+#include "../pistol-whip-hook/PolyHook_2_0/headers/Enums.hpp"
+
 extern "C" MODLOADER_API int load(void);

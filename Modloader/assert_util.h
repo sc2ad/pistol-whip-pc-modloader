@@ -1,6 +1,5 @@
 #include <windows.h>
-
-#define EXIT_FAILURE -1
+#include <stdlib.h>
 
 #define ASSERT(test, message)                    \
 	if(!(test))                                  \
