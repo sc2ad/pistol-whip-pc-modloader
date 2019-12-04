@@ -59,19 +59,19 @@ MODLOADER_API int load(void)
 	}
 	auto gameassemb = LoadLibraryA("GameAssembly.dll");
 	ASSERT(gameassemb, L"GameAssembly.dll failed to load!");
-	auto attemptProc = GetProcAddress(gameassemb, "il2cpp_string_new");
-	auto base = (uint64_t)gameassemb;
-	LOG("GameAssembly.dll base: %x\n", base);
-	LOG("il2cpp_string_new proc address: %p\n", attemptProc);
-	LOG("il2cpp_string_new RVA: %x\n", (uint64_t)attemptProc - base);
-	LOG("Attempting to patch il2cpp_string_new...\n");
+	//auto attemptProc = GetProcAddress(gameassemb, "il2cpp_string_new");
+	//auto base = (uint64_t)gameassemb;
+	//LOG("GameAssembly.dll base: %x\n", base);
+	//LOG("il2cpp_string_new proc address: %p\n", attemptProc);
+	//LOG("il2cpp_string_new RVA: %x\n", (uint64_t)attemptProc - base);
+	//LOG("Attempting to patch il2cpp_string_new...\n");
 
-	PLH::CapstoneDisassembler dis(PLH::Mode::x64);
-	PLH::x64Detour detour((uint64_t)attemptProc, (uint64_t)test_il2cpp_string_new, &il2cpp_string_new_orig_offset, dis);
-	detour.hook();
+	//PLH::CapstoneDisassembler dis(PLH::Mode::x64);
+	//PLH::x64Detour detour((uint64_t)attemptProc, (uint64_t)test_il2cpp_string_new, &il2cpp_string_new_orig_offset, dis);
+	//detour.hook();
 
-	//il2cpp_string_new_orig = patch_raw(gameassemb, (DWORD)attemptProc - base, test_il2cpp_string_new, 0x40);
-	LOG("Patched il2cpp_string_new!\n");
+	////il2cpp_string_new_orig = patch_raw(gameassemb, (DWORD)attemptProc - base, test_il2cpp_string_new, 0x40);
+	//LOG("Patched il2cpp_string_new!\n");
 
 	WIN32_FIND_DATAW findData;
 	LOG("Attempting to find all files that match: 'Mods/*.dll'\n");
@@ -90,21 +90,25 @@ MODLOADER_API int load(void)
 		if (findData.dwFileAttributes & FILE_ATTRIBUTE_NORMAL) {
 			// Maybe we can just call LoadLibrary on this file, and GetProcAddress of load and call that?
 			// LOG!
-			LOG("%ls: Loading\n", findData.cFileName);
-			auto lib = LoadLibrary(findData.cFileName);
+			// 240 = max path length
+			wchar_t path[240];
+			wcscpy(path, L"Mods/");
+			wcscat(path, findData.cFileName);
+			LOG("%ls: Loading\n", path);
+			auto lib = LoadLibrary(path);
 			if (!lib) {
-				LOG("%ls: Failed to find library!\n", findData.cFileName);
+				LOG("%ls: Failed to find library!\n", path);
 				continue;
 			}
 			// TODO move this to il2cpp_init hook
 			auto loadCall = GetProcAddress(lib, "load");
 			if (!loadCall) {
-				LOG("%ls: Failed to find load call!\n", findData.cFileName);
+				LOG("%ls: Failed to find load call!\n", path);
 				continue;
 			}
-			LOG("%ls: Calling 'load' function!\n", findData.cFileName);
+			LOG("%ls: Calling 'load' function!\n", path);
 			loadCall();
-			LOG("%ls: Loaded!\n", findData.cFileName);
+			LOG("%ls: Loaded!\n", path);
 		}
 	} while (FindNextFileW(findHandle, &findData) != 0);
 
