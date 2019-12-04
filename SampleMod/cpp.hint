@@ -1,0 +1,2 @@
+#define SAMPLEMOD_API __declspec(dllexport)
+#define SAMPLEMOD_API __declspec(dllimport)
