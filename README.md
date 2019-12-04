@@ -42,11 +42,15 @@ git submodule update --init --recursive
 
    Adjust your project settings with the following:
 
-* Confirm that the selected build platform is `Release` and `x64`
-* Add the `pistol-whip-hook/PolyHook_2_0/` folder to your `IncludePath`
-* Add the `pistol-whip-hook/PolyHook_2_0/` folder to your `AdditionalIncludeDirectories`
-* Set your `LanguageStandard` to `stdcpplatest`
-* Set `GenerateDebugInformation` to `false`
-* Add both `pistol-whip-hook/PolyHook_2_0/PolyHook_2.lib` and `pistol-whip-hook/PolyHook_2_0/capstone.lib` to `AdditionalDependencies`
+    * Confirm that the selected build platform is `Release` and `x64`
+    * Add the `pistol-whip-hook/PolyHook_2_0/` folder to your `IncludePath`
+    * Add the `pistol-whip-hook/PolyHook_2_0/` folder to your `AdditionalIncludeDirectories`
+    * Set your `LanguageStandard` to `stdcpplatest`
+    * Set `GenerateDebugInformation` to `false`
+    * Add both `pistol-whip-hook/PolyHook_2_0/PolyHook_2.lib` and `pistol-whip-hook/PolyHook_2_0/capstone.lib` to `AdditionalDependencies`
 
 5. Package `MODLOADER.dll` `winhttp.dll` and `PolyHook_2.dll` into `Modloader.zip` and publish a release!
+
+## Developing
+
+In order to develop mods that will be loaded by this modloader, set up a build environment in Visual Studio where you follow the above project settings. The project should be a C++ `.dll` with exports, and the code that will get loaded by your mod will be called via a method you should define: `extern "C" MYMOD_API int load();`
