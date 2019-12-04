@@ -1,19 +1,12 @@
 // Modloader.cpp : Defines the exported functions for the DLL.
 //
 
-#define _VERBOSE 1 // For logging
-
-//////////////////////////////// TODO REMOVE
-#ifndef X64
-#define X64
-#endif
-////////////////////////////////
-
 #include "pch.h"
 #include "framework.h"
 #include "Modloader.h"
 #include "logger.h"
 #include "assert_util.h"
+#include <exception>
 
 //void* (*il2cpp_string_new_orig)(const char* text);
 static uint64_t il2cpp_string_new_orig_offset;
@@ -34,7 +27,7 @@ void* test_il2cpp_string_new(const char* text) {
 // and load the mods in il2cpp_init.
 MODLOADER_API int load(void)
 {
-	init_logger();
+	init_logger("modloader");
 
 	if (!CreateDirectory(L"Mods/", NULL) && ERROR_ALREADY_EXISTS != GetLastError())
 	{
@@ -87,29 +80,30 @@ MODLOADER_API int load(void)
 
 	do
 	{
-		if (findData.dwFileAttributes & FILE_ATTRIBUTE_NORMAL) {
-			// Maybe we can just call LoadLibrary on this file, and GetProcAddress of load and call that?
-			// LOG!
+		// Maybe we can just call LoadLibrary on this file, and GetProcAddress of load and call that?
 			// 240 = max path length
-			wchar_t path[240];
-			wcscpy(path, L"Mods/");
-			wcscat(path, findData.cFileName);
-			LOG("%ls: Loading\n", path);
-			auto lib = LoadLibrary(path);
-			if (!lib) {
-				LOG("%ls: Failed to find library!\n", path);
-				continue;
-			}
-			// TODO move this to il2cpp_init hook
-			auto loadCall = GetProcAddress(lib, "load");
-			if (!loadCall) {
-				LOG("%ls: Failed to find load call!\n", path);
-				continue;
-			}
-			LOG("%ls: Calling 'load' function!\n", path);
-			loadCall();
-			LOG("%ls: Loaded!\n", path);
+		wchar_t path[240] = { 0 };
+		wcscpy_s(path, L"Mods/");
+		wcscat_s(path, findData.cFileName);
+		LOG("%ls: Loading\n", path);
+		auto lib = LoadLibrary(path);
+		if (!lib) {
+			LOG("%ls: Failed to find library!\n", path);
+			continue;
 		}
+		auto loadCall = GetProcAddress(lib, "load");
+		if (!loadCall) {
+			LOG("%ls: Failed to find load call!\n", path);
+			continue;
+		}
+		LOG("%ls: Calling 'load' function!\n", path);
+		try {
+			reinterpret_cast<function_ptr_t<int, HMODULE>>(loadCall)(gameassemb);
+		}
+		catch (int s) {
+			LOG("%ls: FAILED TO CALL 'load' FUNCTION!\n", path);
+		}
+		LOG("%ls: Loaded!\n", path);
 	} while (FindNextFileW(findHandle, &findData) != 0);
 
 	LOG("Loaded all mods!\n");

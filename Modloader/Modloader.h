@@ -18,4 +18,8 @@
 #include "../pistol-whip-hook/PolyHook_2_0/headers/Detour/ADetour.hpp"
 #include "../pistol-whip-hook/PolyHook_2_0/headers/Enums.hpp"
 
+template<typename TRet, typename ...TArgs>
+// A generic function pointer
+using function_ptr_t = TRet(*)(TArgs...);
+
 extern "C" MODLOADER_API int load(void);
