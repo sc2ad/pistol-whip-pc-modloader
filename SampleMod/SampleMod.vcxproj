@@ -99,7 +99,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)../Modloader/;$(ProjectDir)../pistol-whip-hook/PolyHook_2_0/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)../pistol-whip-hook/PolyHook_2_0/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="logger.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SampleMod.h" />
   </ItemGroup>

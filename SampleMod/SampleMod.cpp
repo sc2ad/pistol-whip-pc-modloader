@@ -5,7 +5,6 @@
 #include "framework.h"
 #include "SampleMod.h"
 #include "logger.h"
-#include "assert_util.h"
 
 static uint64_t il2cpp_string_new_orig_offset;
 void* (*il2cpp_string_new_orig)(const char* text);
@@ -20,8 +19,9 @@ void* test_il2cpp_string_new(const char* text) {
 	return tmp;
 }
 
-SAMPLEMOD_API int load(HMODULE gameAssembly) {
-	init_logger("MyMod");
+SAMPLEMOD_API int load(HANDLE logHandle, HMODULE gameAssembly) {
+	init_logger(logHandle);
+	LOG("Beginning load!\n");
 	// Install hooks onto gameAssembly here
 	auto attemptProc = GetProcAddress(gameAssembly, "il2cpp_string_new");
 	auto base = (uint64_t)gameAssembly;
@@ -33,7 +33,9 @@ SAMPLEMOD_API int load(HMODULE gameAssembly) {
 	PLH::CapstoneDisassembler dis(PLH::Mode::x64);
 	PLH::x64Detour detour((uint64_t)attemptProc, (uint64_t)test_il2cpp_string_new, &il2cpp_string_new_orig_offset, dis);
 	detour.hook();
+
+	LOG("Hooked il2cpp_string_new!\n");
 	// Close logger to flush to file
-	free_logger();
+	//free_logger();
 	return 0;
 }

@@ -8,26 +8,19 @@
 #include "assert_util.h"
 #include <exception>
 
-//void* (*il2cpp_string_new_orig)(const char* text);
-static uint64_t il2cpp_string_new_orig_offset;
-void* (*il2cpp_string_new_orig)(const char* text);
-
-void* test_il2cpp_string_new(const char* text) {
-	//init_logger(); // again
-	LOG("Hello from il2cpp_string_new! - Creating text with name: %s\n", text);
-	//free_logger(); // again
-	auto tmp = PLH::FnCast(il2cpp_string_new_orig_offset, il2cpp_string_new_orig)(text);
-	//auto tmp = il2cpp_string_new_orig(text);
-	LOG("Created string with pointer: %p\n", tmp);
-	return tmp;
-}
-
 // This function is used to load in all of the mods into the main assembly.
 // It will construct them, create a hook into il2cpp_init to use
 // and load the mods in il2cpp_init.
 MODLOADER_API int load(void)
 {
-	init_logger("modloader");
+	if (!CreateDirectory(L"Logs/", NULL) && ERROR_ALREADY_EXISTS != GetLastError())
+	{
+		MessageBoxW(NULL, L"Could not create Logs/ directory!", L"Could not create Logs directory!'",
+			MB_OK | MB_ICONERROR | MB_SYSTEMMODAL | MB_TOPMOST | MB_SETFOREGROUND);
+		ExitProcess(GetLastError());
+	}
+
+	init_logger(L"modloader");
 
 	if (!CreateDirectory(L"Mods/", NULL) && ERROR_ALREADY_EXISTS != GetLastError())
 	{
@@ -98,7 +91,14 @@ MODLOADER_API int load(void)
 		}
 		LOG("%ls: Calling 'load' function!\n", path);
 		try {
-			reinterpret_cast<function_ptr_t<int, HMODULE>>(loadCall)(gameassemb);
+			auto func = reinterpret_cast<function_ptr_t<int, HANDLE, HMODULE>>(loadCall);
+			LOG("%ls: Calling load with function pointer: %p\n", path, func);
+			if (func) {
+				// Initialize a unique log for this mod
+				auto log = make_logger(findData.cFileName);
+				LOG("%ls: Created local log with pointer: %p\n", path, log);
+				func(log, gameassemb);
+			}
 		}
 		catch (int s) {
 			LOG("%ls: FAILED TO CALL 'load' FUNCTION!\n", path);
@@ -108,6 +108,6 @@ MODLOADER_API int load(void)
 
 	LOG("Loaded all mods!\n");
 
-	free_logger();
+	//free_logger();
 	return 0;
 }

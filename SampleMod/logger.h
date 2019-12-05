@@ -1,21 +1,13 @@
+#ifndef LOGGING_H
+#define LOGGING_H
 #ifndef NO_LOGGING
 #include <windows.h>
 static HANDLE log_handle;
 char buffer[4096];
 
-#define PATH_LENGTH 240
-
-inline HANDLE make_logger(const wchar_t* name) {
-	wchar_t path[PATH_LENGTH] = { 0 };
-	wcscpy_s(path, L"Logs/");
-	wcscat_s(path, name);
-	wcscat_s(path, L".log");
-	return CreateFileW(path, GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-}
-
-inline void init_logger(const wchar_t* name)
+inline void init_logger(HANDLE handle)
 {
-	log_handle = make_logger(name);
+	log_handle = handle;
 }
 
 inline void free_logger()
@@ -39,4 +31,5 @@ inline void free_logger()
 }
 
 #define LOG(message, ...) 
+#endif
 #endif
