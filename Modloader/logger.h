@@ -7,9 +7,7 @@ char buffer[4096];
 
 inline HANDLE make_logger(const wchar_t* name) {
 	wchar_t path[PATH_LENGTH] = { 0 };
-	wcscpy_s(path, L"Logs/");
-	wcscat_s(path, name);
-	wcscat_s(path, L".log");
+	wsprintf(path, L"Logs/%ls.log", name);
 	return CreateFileW(path, GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 }
 
@@ -26,6 +24,7 @@ inline void free_logger()
 #define LOG(message, ...) \
 	{ \
 		size_t len = wsprintfA(buffer, message, __VA_ARGS__); \
+		strcat_s(buffer, "\n"); \
 		WriteFile(log_handle, buffer, len, NULL, NULL); \
 		FlushFileBuffers(log_handle); \
 	}
