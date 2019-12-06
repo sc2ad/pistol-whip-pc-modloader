@@ -73,6 +73,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>SAMPLEMOD</TargetName>
     <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>C:\Users\madsm\source\repos\pistol-whip-pc-modloader\pistol-whip-hook;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\madsm\source\repos\pistol-whip-pc-modloader\pistol-whip-hook;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>SAMPLEMOD</TargetName>
@@ -108,7 +110,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(ProjectDir)../pistol-whip-hook/PolyHook_2_0/PolyHook_2.lib;$(ProjectDir)../pistol-whip-hook/PolyHook_2_0/capstone.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)../pistol-whip-hook/PolyHook_2_0/PolyHook_2.lib;$(ProjectDir)../pistol-whip-hook/PolyHook_2_0/capstone.lib;$(ProjectDir)../pistol-whip-hook/PolyHook_2_0/asmjit.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

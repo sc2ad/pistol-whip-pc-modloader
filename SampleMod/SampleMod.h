@@ -9,7 +9,6 @@
 #else
 #define SAMPLEMOD_API __declspec(dllimport)
 #endif
-
 #include "../pistol-whip-hook/PolyHook_2_0/headers/CapstoneDisassembler.hpp"
 #include "../pistol-whip-hook/PolyHook_2_0/headers/IHook.hpp"
 #include "../pistol-whip-hook/PolyHook_2_0/headers/Detour/x64Detour.hpp"
@@ -18,6 +17,7 @@
 #include "../pistol-whip-hook/PolyHook_2_0/headers/Detour/ADetour.hpp"
 #include "../pistol-whip-hook/PolyHook_2_0/headers/Enums.hpp"
 #include "../pistol-whip-hook/PolyHook_2_0/headers/ErrorLog.hpp"
+#include "../pistol-whip-hook/PolyHook_2_0/headers/Detour/ILCallback.hpp"
 
 
 extern "C" SAMPLEMOD_API int load(HANDLE logHandle, HMODULE gameAssembly);

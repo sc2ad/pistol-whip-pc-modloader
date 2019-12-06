@@ -21,7 +21,6 @@ namespace il2cpp_utils {
 	}
 
 	Il2CppClass* GetClassFromName(const char* name_space, const char* type_name) {
-		il2cpp_functions::Init();
 
 		auto dom = il2cpp_functions::domain_get();
 		if (!dom) {

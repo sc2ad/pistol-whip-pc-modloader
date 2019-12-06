@@ -49,10 +49,15 @@ void dumpErrorLog()
 	} while (!s.empty());
 }
 
+NOINLINE void gunfireCallback(const PLH::ILCallback::Parameters* p, const uint8_t count, const PLH::ILCallback::ReturnValue* retVal)
+{
+	LOG("Gunfire callback called!");
+}
+
 
 SAMPLEMOD_API int load(HANDLE logHandle, HMODULE gameAssembly) {
 	init_logger(logHandle);
-	il2cpp_functions::Init();
+	il2cpp_functions::Init(gameAssembly);
 	LOG("Beginning load!\n");
 	// Install hooks onto gameAssembly here
 	auto attemptProc = GetProcAddress(gameAssembly, "il2cpp_string_new");
@@ -63,21 +68,27 @@ SAMPLEMOD_API int load(HANDLE logHandle, HMODULE gameAssembly) {
 	LOG("Attempting to patch gunfire...\n");
 
 	PLH::CapstoneDisassembler dis(PLH::Mode::x64);
-	//PLH::x64Detour detour((uint64_t)attemptProc, (uint64_t)test_il2cpp_string_new, &il2cpp_string_new_orig_offset, dis);
-	//detour.hook();
-	PLH::x64Detour gunfireDetour((uint64_t)il2cpp_utils::GetMethod("", "Gun", "Fire", 0)->methodPointer, (uint64_t)h_gunfire, &gunfire_tramp, dis);
+	PLH::ILCallback callback;
+	asmjit::FuncSignatureT<void, void*> gunfireSig;
+	gunfireSig.setCallConv(asmjit::CallConv::kIdX86Win64);
+	uint64_t jit = callback.getJitFunc(gunfireSig, &gunfireCallback);
+
+
+
+
+	PLH::x64Detour gunfireDetour((uint64_t)il2cpp_utils::GetMethod("", "Gun", "Fire", 0)->methodPointer, (uint64_t)jit, callback.getTrampolineHolder(), dis);
 	if (gunfireDetour.hook() == false)
 	{
 		LOG("Failed to hook gun::fire()\n");
 		dumpErrorLog();
 	}
-	PLH::x64Detour gunreloadDetour((uint64_t)il2cpp_utils::GetMethod("", "Gun", "Reload", 1)->methodPointer, (uint64_t)h_gunreload, &gunreload_tramp, dis);
-	
-	if (gunreloadDetour.hook() == false)
-	{
-		LOG("Failed to hook gun::reload()\n");
-		dumpErrorLog();
-	}
+	//PLH::x64Detour gunreloadDetour((uint64_t)il2cpp_utils::GetMethod("", "Gun", "Reload", 1)->methodPointer, (uint64_t)h_gunreload, &gunreload_tramp, dis);
+	//
+	//if (gunreloadDetour.hook() == false)
+	//{
+	//	LOG("Failed to hook gun::reload()\n");
+	//	dumpErrorLog();
+	//}
 
 	LOG("Installed hooks!!\n");
 	// Close logger to flush to file

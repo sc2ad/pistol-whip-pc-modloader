@@ -7,18 +7,11 @@
 #include <strsafe.h>
 
 
-void il2cpp_functions::Init()
+void il2cpp_functions::Init(HMODULE module)
 {
 	if (!initialized)
 	{
 		initialized = true;
-	//*(void**)(&class_get_field_from_name) = (void*)0x00007FFA6BD40B90;
-		HMODULE module = NULL;
-		if ((module = GetModuleHandle(TEXT("gameassembly.dll"))) == NULL)
-		{
-			LOG("Failed to get handle for gameassembly.dll");
-			exit(0);
-		}
 
 		*(void**)(&class_get_field_from_name) = GetProcAddress(module,"il2cpp_class_get_field_from_name");
 		*(void**)(&field_get_value) = GetProcAddress(module, "il2cpp_field_get_value");

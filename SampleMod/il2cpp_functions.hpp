@@ -3,7 +3,7 @@
 #include <il2cpp-class-internals.h>
 #include <il2cpp-api-types.h>
 #include <il2cpp-tabledefs.h>
-
+#include <windows.h>
 // TAKEN FROM https://github.com/sc2ad/pistol-whip-hook/blob/fd7edc3d1d39d231e43c1430dbf4336045a056cc/shared/utils/il2cpp-functions.hpp
 // A class which contains all available il2cpp functions
 // Created by zoller27osu
@@ -218,6 +218,6 @@ public:
 	// Whether all of the il2cpp functions have been initialized or not
 	inline static bool initialized = false;
 	// Initializes all of the IL2CPP functions via dlopen and dlsym for use.
-	static void Init();
+	static void Init(HMODULE module);
 };
 
