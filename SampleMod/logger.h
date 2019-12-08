@@ -3,7 +3,7 @@
 #ifndef NO_LOGGING
 #include <windows.h>
 static HANDLE log_handle;
-char buffer[4096];
+static char buffer[4096];
 
 inline void init_logger(HANDLE handle)
 {
