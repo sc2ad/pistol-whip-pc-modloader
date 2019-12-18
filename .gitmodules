@@ -1,6 +1,6 @@
 [submodule "pistol-whip-hook"]
 	path = pistol-whip-hook
 	url = https://github.com/sc2ad/pistol-whip-hook
-[submodule "pistol-whip-doorstop"]
+[submodule "winhttp-doorstop"]
 	path = pistol-whip-doorstop
-	url = https://github.com/sc2ad/pistol-whip-doorstop
+	url = https://github.com/sc2ad/winhttp-doorstop
